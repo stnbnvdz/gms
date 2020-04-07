@@ -1,0 +1,19 @@
+@media print { 
+  .box-header, .content-header, .dataTables_length , .dataTables_filter, .dataTables_info, .dataTables_paginate, .action-hide, .buttons-hide, tfoot, #activated-btn, .main-footer, hr, #btn-staff, #btn-action{ 
+     visibility: hidden; 
+     font-size: 10px;
+     line-height: 1.2;
+  }
+  html, body {
+    height:100%;
+    width:100%; 
+    font-size: 10px;
+    margin-left:0 !important;
+    padding-left: 0 !important;
+    overflow: hidden !important;
+  }
+  .testt tbody > tr > td {
+    white-space: nowrap !important;
+    }
+  
+} 
