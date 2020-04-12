@@ -189,9 +189,9 @@ Class GymAjaxController extends AppController
 	
 	public function deletePackage()
 	{
-		$did = $this->request->data['did'];
+		$dpid = $this->request->data['dpid'];
 		$package_table = TableRegistry::get("Package");
-		$row = $package_table->get($did);
+		$row = $package_table->get($dpid);
 		echo ($package_table->delete($row)) ? true : false ;		
 	}
 

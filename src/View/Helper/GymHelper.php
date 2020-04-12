@@ -311,6 +311,19 @@ public function get_membership_paymentstatus($mp_id)
 	*/
 }
 
+public function get_package_paymentstatus($pp_id)
+{
+	$package_payment_tbl = TableRegistry::get('PackagePayment');	
+	$result = $package_payment_tbl->get($pp_id)->toArray();
+	if($result['package_paid_amount'] >= $result['package_amount'])
+		return 'Fully Paid';		
+	elseif($result['package_paid_amount'] == 0 )
+		return 'Not Paid';
+	else
+		return 'Partially Paid';
+	
+}
+
 public function get_total_group_members($gid)
 {
 	$mem_table = TableRegistry::get("GymMember");
