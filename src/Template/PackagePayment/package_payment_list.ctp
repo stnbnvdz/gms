@@ -79,8 +79,8 @@ $(document).ready(function() {
 								<td>".date($this->Gym->getSettings("date_format"),strtotime($row["package_end_date"]))."</td>
 								<td><span class='bg-primary pay_status'>". __($this->Gym->get_package_paymentstatus($row['pp_id']))."<span></td>
 								<td id='btn-action'>
-								<a href='javascript:void(0)' class='btn btn-flat btn-default amt_pay' data-url='".$this->request->base ."/GymAjax/gymPay/{$row['pp_id']}'>".__('Pay')."</a>
-								<a href='javascript:void(0)' class='btn btn-flat btn-info view_invoice' data-url='".$this->request->base ."/GymAjax/viewInvoice/{$row['pp_id']}'><i class='fa fa-eye'></i></a>";
+								<a href='javascript:void(0)' class='btn btn-flat btn-default amt_pay' data-url='".$this->request->base ."/GymAjax/gymPackagePay/{$row['pp_id']}'>".__('Pay')."</a>
+								<a href='javascript:void(0)' class='btn btn-flat btn-info view_invoice' data-url='".$this->request->base ."/GymAjax/viewPackageInvoice/{$row['pp_id']}'><i class='fa fa-eye'></i></a>";
 								if($session["role_name"] == "administrator")
 								{
 									echo " <a href='".$this->request->base ."/PackagePayment/PackageEdit/{$row['pp_id']}' class='btn btn-flat btn-primary' title='Edit'><i class='fa fa-edit'></i></a>

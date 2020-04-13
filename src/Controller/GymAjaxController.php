@@ -1167,6 +1167,61 @@ Class GymAjaxController extends AppController
 	<?php
 	}
 	
+	public function gymPackagePay($pp_id)
+	{	$this->loadComponent("GYMFunction");
+		$session = $this->request->session()->read("User");
+		?>
+		<script>
+			$(document).ready(function(){
+				$(".validateForm").validationEngine(); /* {binded:false} */		
+			});		
+		</script>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="gridSystemModalLabel"><?php echo __("Add Payment");?></h4>
+		</div>
+		<div class="modal-body">		
+			<form name="expense_form" action="" method="post" class="form-horizontal validateForm">
+         		<input type="hidden" name="action" value="gmgt_member_add_payment">
+		<input type="hidden" name="pp_id" value="<?php echo $pp_id;?>">
+		<input type="hidden" name="package_created_by" value="<?php echo $session["id"];?>">
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="amountt"><?php echo __("Paid Amount");?><span class="text-danger">*</span></label>
+			<div class="col-sm-8">
+				<div class='input-group'>
+					<span class='input-group-addon'><?php echo $this->GYMFunction->get_currency_symbol();?></span>
+					<input id="amountt" class="form-control validate[required] text-input" type="text" value="" name="amountt">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="package_payment_method"><?php echo __("Payment By");?><span class="text-danger">*</span></label>
+			<div class="col-sm-8">
+				<select name="package_payment_method" required="true" id="package_payment_method" class="form-control">
+					<?php 
+					if($session["role_name"] == "member")
+					{ ?>
+						<option value="Paypal"><?php echo __("Paypal");?></option>
+				<?php }
+					else{ ?>		
+					<option value="Cash"><?php echo __("Cash");?></option>
+					<option value="Cheque"><?php echo __("Cheque");?></option>
+					<option value="Bank Transfer"><?php echo __("Bank Transfer");?></option>
+				<?php } ?>	
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-offset-2 col-sm-8">
+        	 <input type="submit" value="<?php echo __("Add Payment");?>" name="add_fee_payment" class="btn btn-flat btn-success">
+        </div>
+		</form>		
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-flat btn-default" data-dismiss="modal"><?php echo __("Close");?></button>				
+		</div>
+	<?php
+	}
+
 	public function getAmountByMemberships()
 	{
 		if($this->request->is('ajax'))
@@ -1331,7 +1386,148 @@ Class GymAjaxController extends AppController
 		</div>
 	<?php
 	}
-	
+
+	public function viewPackageInvoice($pp_id)
+	{
+		$this->loadComponent("GYMFunction");
+		$payment_tbl = TableRegistry::get("PackagePayment");
+		$setting_tbl = TableRegistry::get("GeneralSetting");
+		$pay_history_tbl = TableRegistry::get("PackagePaymentHistory");
+		
+		$sys_data = $setting_tbl->find()->select(["name","address","gym_logo","date_format","office_number","country"])->hydrate(false)->toArray();
+		$sys_data[0]["gym_logo"] = (!empty($sys_data[0]["gym_logo"])) ? $this->request->base . "/webroot/upload/".  $sys_data[0]["gym_logo"] : $this->request->base . "/webroot/img/Thumbnail-img.png";
+		$data = $payment_tbl->find("all")->contain(["GymMember","Package"])->where(["pp_id"=>$pp_id])->hydrate(false)->toArray();
+		$history_data = $pay_history_tbl->find("all")->where(["pp_id"=>$pp_id])->hydrate(false)->toArray();
+		
+		$session = $this->request->session();
+		$float_l = ($session->read("User.is_rtl") == "1") ? "right" : "left";
+		$float_r = ($session->read("User.is_rtl") == "1") ? "left" : "right";
+		?>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="gridSystemModalLabel"><?php echo __("Invoice");?></h4>
+		</div>
+		<div class="modal-body">
+		<div id="invoice_print"> 
+		<table width="100%" border="0">
+			<tbody>
+				<tr>
+					<td width="70%">
+						<img style="max-height:80px;" src="<?php echo $sys_data[0]["gym_logo"]; ?>">
+					</td>
+					<td align="right" width="24%">
+						<h5><?php $issue_date=$data[0]['package_created_date']->format("Y-m-d");
+							$issue_date= date($sys_data[0]['date_format'],strtotime($issue_date));
+							echo __('Issue Date')." : ". $issue_date;?></h5>
+						<h5><?php echo __('Status')." : "; echo "<span style='cursor:default;' class='btn btn-success btn-xs'>";
+							echo __($this->GYMFunction->get_package_paymentstatus($pp_id));
+							echo "</span>";?>
+						</h5>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<table width="100%" border="0">
+			<tbody>
+				<tr>
+					<td align="<?php echo $float_l;?>">
+						<h4><?php echo __('Payment To');?> </h4>
+					</td>
+					<td align="<?php echo $float_r;?>">
+						<h4><?php echo __('Bill To');?> </h4>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" align="<?php echo $float_l;?>">
+						<?php echo $sys_data[0]["name"]."<br>"; 
+						 echo $sys_data[0]["address"].","; 
+						 echo $sys_data[0]["country"]."<br>"; 
+						 echo $sys_data[0]["office_number"]."<br>"; 
+						?>
+					</td>
+					<td valign="top" align="<?php echo $float_r;?>">
+						<?php
+						$member_id=$data[0]["member_id"];				
+						echo $data[0]["gym_member"]["first_name"]." ".$data[0]["gym_member"]["last_name"]."<br>"; 
+						echo $data[0]["gym_member"]["address"].","; 
+						echo $data[0]["gym_member"]["city"].","; 
+						echo $data[0]["gym_member"]["zipcode"].",<BR>"; 
+						echo $data[0]["gym_member"]["state"].","; 
+						echo $sys_data[0]["country"].","; 
+						echo $data[0]["gym_member"]["mobile"]."<br>"; 
+						?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<table class="table table-bordered" width="100%" border="1" style="border-collapse:collapse;">
+			<thead>
+				<tr>
+					<th class="text-center">#</th>
+					<th class="text-center"> <?php echo __('Package Type');?></th>
+					<!--<th class="text-center"> <?php echo __('Sign Up Fee');?></th> -->
+					<th class="text-center"> <?php echo __('Package Fee');?></th>
+					<th><?php echo __('Total');?> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<td>1</td>
+				<td class="text-center"><?php echo $data[0]["package"]["package_label"];?></td>
+			<!-- <td class="text-center"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $data[0]["package"]["signup_fee"];?></td> -->
+				<td class="text-center"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $data[0]["package"]["package_amount"];?></td>
+				<td class="text-center"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $subtotal = intval($data[0]["package"]["package_amount"]) /* + intval($data[0]["membership"]["signup_fee"]);*/ ?></td>
+			</tbody>
+		</table>
+		<table width="100%" border="0">
+			<tbody>
+				<tr>
+					<td width="80%" align="<?php echo $float_r;?>"><?php echo __('Subtotal :');?></td>
+					<td align="<?php echo $float_r;?>"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $subtotal;?></td>
+				</tr>
+				<tr>
+					<td width="80%" align="<?php echo $float_r;?>"><?php echo __('Payment Made :');?></td>
+					<td align="<?php echo $float_r;?>"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $data[0]["package_paid_amount"];?></td>
+				</tr>
+				<tr>
+					<td width="80%" align="<?php echo $float_r;?>"><?php echo __('Due Amount  :');?></td>
+					<td align="<?php echo $float_r;?>"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $subtotal - $data[0]["package_paid_amount"];?></td>
+				</tr>
+			</tbody>			
+		</table>
+		<hr>
+		<?php if(!empty($history_data))
+		{?>
+		<h4><?php echo __('Payment History');?></h4>
+		<table class="table table-bordered" width="100%" border="1" style="border-collapse:collapse;">
+		<thead>
+				<tr>
+					<th class="text-center"><?php echo __('Date');?></th>
+					<th class="text-center"> <?php echo __('Amount');?></th>
+					<th class="text-center"><?php echo __('Method');?> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach($history_data as  $retrive_date)
+				{?>
+					<tr>
+					<td class="text-center"><?php echo date($this->GYMFunction->getSettings("date_format"),strtotime($retrive_date["package_paid_by_date"]));?></td>
+					<td class="text-center"><?php echo $this->GYMFunction->get_currency_symbol();?> <?php echo $retrive_date["amountt"];?></td>
+					<td class="text-center"><?php echo $retrive_date["package_payment_method"];?></td>
+					</tr>
+		  <?php }?>
+			</tbody>
+		</table>
+		<?php }?>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo __("Close");?></button>				
+		</div>
+	<?php
+	}
+
 	public function viewIncomeExpense($id)
 	{
 		$this->loadComponent("GYMFunction");
@@ -1573,4 +1769,5 @@ Class GymAjaxController extends AppController
 		}
 		$this->autoRender = false;
 	}
+	
 }

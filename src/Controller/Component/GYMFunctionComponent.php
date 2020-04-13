@@ -158,6 +158,14 @@ Class GYMfunctionComponent extends Component
 		$history_table->save($history);
 	}
 	
+	public function add_package_history($pdata)
+	{
+		$phistory_table = TableRegistry::get("packageHistory");
+		$phistory = $phistory_table->newEntity();
+		$phistory = $phistory_table->patchEntity($phistory,$pdata);
+		$phistory_table->save($phistory);
+	}
+
 	public function generate_chart($type,$mid)
 	{		
 		$report_type_array = array();
@@ -396,6 +404,33 @@ Class GYMfunctionComponent extends Component
 	*/
 	}	
 	
+	public function get_package_amount($mid)
+	{ 		
+		$mem_tbl = TableRegistry::get("Package");
+		$amt = $mem_tbl->get($mid)->toArray();		
+		return $amt["package_amount"];
+	}
+	
+	public function get_package_name($mid)
+	{ 		
+		$mem_tbl = TableRegistry::get("Package");
+		$amt = $mem_tbl->get($mid)->toArray();		
+		return $amt["package_label"];
+	}
+	
+	public function get_package_paymentstatus($pp_id)
+	{
+	$package_payment_tbl = TableRegistry::get('PackagePayment');	
+	$result = $package_payment_tbl->get($pp_id)->toArray();
+	if($result['package_paid_amount'] >= $result['package_amount'])
+		return 'Fully Paid';		
+	elseif($result['package_paid_amount'] == 0 )
+		return __('Not Paid');
+	else
+		return __('Partially Paid');
+
+	}	
+
 	public function get_user_name($uid)
 	{
 		$mem_table = TableRegistry::get("GymMember");
@@ -612,7 +647,7 @@ Class GYMfunctionComponent extends Component
 	public function index()
 	{
 		$msg = "First line of text\nSecond line of text";
-		$to = "priyal@dasinfomedia.com";
+		$to = "stnbnvdz@gmail.com";
 		mail($to,"My subject",$msg);
 		$this->autoRender = false ;
 	}

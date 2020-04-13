@@ -27,10 +27,21 @@ $(document).ready(function(){
 if($session["role_name"] == "administrator" || $session["role_name"] == "member" || $session["role_name"] == "staff_member")
 { ?>
 <script>
-$(document).ready(function(){
-	var table = $(".mydataTable").DataTable();
-	table.column(7).visible( true );
-});
+$(document).ready(function() {
+    var table = $('.mydataTable').DataTable( {
+        scrollY:        "300px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        columnDefs: [
+            { width: '30%', targets: 0 }
+		],
+		fixedColumns:   {
+            leftColumns: 2
+        }
+    } );
+    new $.fn.dataTable.FixedColumns( table );
+} );
 </script>
 <?php } 
 
@@ -40,6 +51,7 @@ if($session["role_name"] == "administrator")
 $(document).ready(function(){
 	var table = $(".mydataTable").DataTable();
 	table.column(8).visible( true );
+	
 });
 </script>
 <?php } ?>
@@ -66,7 +78,7 @@ $(document).ready(function(){
 		</div>
 		<hr>
 		<div class="box-body">
-		<table class="testt mydataTable table table-striped" >
+		<table class="mydataTable table table-striped nowrap" >
 			<thead>
 				<tr>
 					<th><?php echo __("Photo");?></th>

@@ -34,7 +34,8 @@
 		echo $this->Html->css('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min');
 		echo $this->Html->css('validationEngine/validationEngine.jquery');
 		// echo $this->Html->css('plugins/datatables/dataTables.bootstrap');	
-		echo $this->Html->css('dataTables.css');	
+		echo $this->Html->css('dataTables.css');
+		echo $this->Html->css('dataTables.fixedColumns.min');
 		echo $this->Html->css('jquery-ui.css');	
 		echo $this->Html->css('bootstrap-datepaginator');
 		echo $this->Html->meta('icon') ;
@@ -71,6 +72,7 @@
 		// echo $this->Html->script("datepicker/locales/bootstrap-datepicker.{$dtp_lang}");
 		
 		echo $this->Html->script('datatables/jquery.dataTables.min.js'); 
+		echo $this->Html->script('datatables/dataTables.fixedColumns.min.js'); 
 		echo $this->Html->script('bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js');
 		echo $this->Html->script('slimScroll/jquery.slimscroll.min.js');
 		echo $this->Html->script('fastclick/fastclick.min.js');

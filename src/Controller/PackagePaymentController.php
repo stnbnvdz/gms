@@ -19,12 +19,12 @@ class PackagePaymentController extends AppController
 		$session = $this->request->session()->read("User");
 		if($session["role_name"] == "member")
 		{			
-			$data = $this->PackagePayment->find("all")->contain(["Package","GymMember"])->where(["GymMember.id"=>$session["id"]])->hydrate(false)->toArray();
+			$pdata = $this->PackagePayment->find("all")->contain(["Package","GymMember"])->where(["GymMember.id"=>$session["id"]])->hydrate(false)->toArray();
 		}
 		else{
-			$data = $this->PackagePayment->find("all")->contain(["Package","GymMember"])->hydrate(false)->toArray();
+			$pdata = $this->PackagePayment->find("all")->contain(["Package","GymMember"])->hydrate(false)->toArray();
 		}
-		$this->set("data",$data);
+		$this->set("data",$pdata);
 		
 		if($this->request->is("post"))
 		{			
@@ -50,20 +50,20 @@ class PackagePaymentController extends AppController
 				$this->PackagePayment->save($row);
 				
 				$hrow = $this->PackagePayment->PackagePaymentHistory->newEntity();
-				$data['pp_id'] = $pp_id;
-				$data['amountt'] = $this->request->data["amountt"];
-				$data['package_payment_method'] = $this->request->data["package_payment_method"];
-				$data['package_paid_by_date'] = date("Y-m-d");
-				$data['package_created_by'] = $session["id"];
-				$data['package_transaction_id'] = "";
+				$pdata['pp_id'] = $pp_id;
+				$pdata['amountt'] = $this->request->data["amountt"];
+				$pdata['package_payment_method'] = $this->request->data["package_payment_method"];
+				$pdata['package_paid_by_date'] = date("Y-m-d");
+				$pdata['package_created_by'] = $session["id"];
+				$pdata['package_transaction_id'] = "";
 				
-				$hrow = $this->PackagePayment->PackagePaymentHistory->patchEntity($hrow,$data);						
+				$hrow = $this->PackagePayment->PackagePaymentHistory->patchEntity($hrow,$pdata);						
 				if($this->PackagePayment->PackagePaymentHistory->save($hrow))
 				{
 					$this->Flash->success(__("Success! Payment Added Successfully."));
 				}
 			}
-			return $this->redirect(["action"=>"paymentPackageList"]);
+			return $this->redirect(["action"=>"packagePaymentList"]);
 		}
     }
 	
@@ -79,11 +79,11 @@ class PackagePaymentController extends AppController
 		
 		if($this->request->is('post'))
 		{			
-			$pid = $this->request->data["user_id"];
+			$mid = $this->request->data["user_id"];
 			$start_date = date("Y-m-d",strtotime($this->request->data["package_valid_from"]));
 			$end_date = date("Y-m-d",strtotime($this->request->data["package_valid_to"]));
 			$row = $this->PackagePayment->newEntity();
-			$pdata["member_id"] = $pid;
+			$pdata["member_id"] = $mid;
 			$pdata["package_id"] = $this->request->data["package_id"];
 			$pdata["package_amount"] = $this->request->data["package_amount"];
 			$pdata["package_paid_amount"] = 0;
@@ -95,14 +95,14 @@ class PackagePaymentController extends AppController
 			$row = $this->PackagePayment->patchEntity($row,$pdata);
 			$this->PackagePayment->save($row);			
 			################## MEMBER's Current Membership Change ##################
-			$member_data = $this->PackagePayment->GymMember->get($pid);
+			$member_data = $this->PackagePayment->GymMember->get($mid);
 			$member_data->selected_package = $this->request->data["package_id"];
 			$member_data->package_valid_from = $start_date;
 			$member_data->package_valid_to = $end_date;
 			$this->PackagePayment->GymMember->save($member_data);
 			#####################Add Membership History #############################
 			$mem_histoty = $this->PackagePayment->PackageHistory->newEntity();
-			$hdata["member_id"] = $pid;
+			$hdata["member_id"] = $mid;
 			$hdata["selected_package"] = $this->request->data["package_id"];
 			$hdata["package_valid_from"] = $start_date;
 			$hdata["package_valid_to"] = $end_date;
@@ -126,18 +126,18 @@ class PackagePaymentController extends AppController
 		$package = $this->PackagePayment->Package->find("list",["keyField"=>"id","valueField"=>"package_label"]);
 		$this->set("package",$package);
 				
-		$data = $this->PackagePayment->get($eid);
-		$this->set("data",$data->toArray());
+		$pdata = $this->PackagePayment->get($eid);
+		$this->set("data",$pdata->toArray());
 		// var_dump($data->toArray());die;
 		
 		if($this->request->is("post"))
 		{					
-			$pid = $this->request->data["user_id"];
+			$mid = $this->request->data["user_id"];
 			$package_start_date = date("Y-m-d",strtotime($this->request->data["package_valid_from"]));
 			$package_end_date = date("Y-m-d",strtotime($this->request->data["package_valid_to"]));
 		
 			$row = $this->PackagePayment->get($eid);
-			$row->member_id = $pid;
+			$row->member_id = $mid;
 			$row->package_id = $this->request->data["package_id"];
 			$row->package_amount= $this->request->data["package_amount"];
 			$row->package_paid_amount = 0;
@@ -146,14 +146,14 @@ class PackagePaymentController extends AppController
 			$row->package_status = "Continue";
 			$this->PackagePayment->save($row);
 			###############################################################
-			$member_data = $this->PackagePayment->GymMember->get($pid);
+			$member_data = $this->PackagePayment->GymMember->get($mid);
 			$member_data->selected_package = $this->request->data["package_id"];
 			$member_data->package_valid_from = $package_start_date;
 			$member_data->package_valid_to = $package_end_date;
 			$this->PackagePayment->GymMember->save($member_data);
 			###########################################################
 			$this->Flash->success(__("Success! Record Updated Successfully."));	
-			return $this->redirect(["action"=>"paymentPackageList"]);
+			return $this->redirect(["action"=>"packagePaymentList"]);
 		}
 		$this->render("generatePackagePaymentInvoice");		
     }
@@ -170,8 +170,8 @@ class PackagePaymentController extends AppController
 	
 	public function incomePackageList()
     {
-		$data = $this->PackagePayment->GymIncomeExpense->find("all")->contain(["GymMember"])->where(["invoice_type"=>"income"])->hydrate(false)->toArray();
-		$this->set("data",$data);	
+		$pdata = $this->PackagePayment->GymIncomeExpense->find("all")->contain(["GymMember"])->where(["invoice_type"=>"income"])->hydrate(false)->toArray();
+		$this->set("data",$pdata);	
     }
 	
 	public function addPackageIncome()
@@ -185,15 +185,15 @@ class PackagePaymentController extends AppController
 		if($this->request->is("post"))
 		{	
 			$row = $this->PackagePayment->GymIncomeExpense->newEntity();
-			$data = $this->request->data;
+			$pdata = $this->request->data;
 			$total_package_amount = null;
-			foreach($data["income_amount"] as $amount)
+			foreach($pdata["income_amount"] as $amount)
 			{$total_package_amount += $amount;}
-			$data["total_package_amount"] = $total_package_amount;
-			$data["entry"] = $this->get_entry_records($data);
-			$data["receiver_id"] = $session["id"] ;//current userid;			
-			$data["invoice_date"] = date("Y-m-d",strtotime($data["invoice_date"]));	
-			$row = $this->PackagePayment->GymIncomeExpense->patchEntity($row,$data);			
+			$pdata["total_package_amount"] = $total_package_amount;
+			$pdata["entry"] = $this->get_entry_records($pdata);
+			$pdata["receiver_id"] = $session["id"] ;//current userid;			
+			$pdata["invoice_date"] = date("Y-m-d",strtotime($pdata["invoice_date"]));	
+			$row = $this->PackagePayment->GymIncomeExpense->patchEntity($row,$pdata);			
 			if($this->PackagePayment->GymIncomeExpense->save($row))
 			{
 				$this->Flash->success(__("Success! Record Saved Successfully."));	
@@ -202,10 +202,10 @@ class PackagePaymentController extends AppController
 		}
     }
 	
-	public function get_entry_records($data)
+	public function get_entry_records($pdata)
 	{
-		$all_income_entry=$data['income_entry'];
-		$all_income_amount=$data['income_amount'];
+		$all_income_entry=$pdata['income_entry'];
+		$all_income_amount=$pdata['income_amount'];
 		
 		$entry_data=array();
 		$i=0;
@@ -230,15 +230,15 @@ class PackagePaymentController extends AppController
 		
 		if($this->request->is("post"))
 		{
-			$data = $this->request->data;
+			$pdata = $this->request->data;
 			$total_package_amount = null;
-			foreach($data["income_amount"] as $amount)
+			foreach($pdata["income_amount"] as $amount)
 			{$total_package_amount += $amount;}
-			$data["total_package_amount"] = $total_package_amount;
-			$data["entry"] = $this->get_entry_records($data);				
-			$data["invoice_date"] = date("Y-m-d",strtotime($data["invoice_date"]));	
+			$pdata["total_package_amount"] = $total_package_amount;
+			$pdata["entry"] = $this->get_entry_records($pdata);				
+			$pdata["invoice_date"] = date("Y-m-d",strtotime($pdata["invoice_date"]));	
 			
-			$row = $this->PackagePayment->GymIncomeExpense->patchEntity($row,$data);	
+			$row = $this->PackagePayment->GymIncomeExpense->patchEntity($row,$pdata);	
 			if($this->PackagePayment->GymIncomeExpense->save($row))
 			{
 				$this->Flash->success(__("Success! Record Updated Successfully."));	
@@ -248,9 +248,9 @@ class PackagePaymentController extends AppController
 		$this->render("addIncome");
 	}
 	
-	public function deletePackageIncome($dpid)
+	public function deletePackageIncome($did)
     {
-		$row = $this->PackagePayment->GymIncomeExpense->get($dpid);
+		$row = $this->PackagePayment->GymIncomeExpense->get($did);
 		if($this->PackagePayment->GymIncomeExpense->delete($row))
 		{
 			$this->Flash->success(__("Success! Record Deleted Successfully."));	

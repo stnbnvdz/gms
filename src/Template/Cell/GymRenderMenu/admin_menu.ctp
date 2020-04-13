@@ -166,7 +166,7 @@ if($is_rtl == "1") { ?>
 						<i class="fa fa-circle-o"></i> <span><?php echo __('Membership Payment');?></span></i>
 						</a>
 					</li>
-					
+				
 					<li class="<?php echo ($this->request->action == "packagePaymentList" || $this->request->action == "generatePackagePaymentInvoice" || $this->request->action == "packageEdit") ? "active" : "";?>">
 						<a href="<?php echo $this->Gym->createurl("PackagePayment","packagePaymentList");?>">
 						<i class="fa fa-circle-o"></i> <span><?php echo __('Package Payment');?></span></i>

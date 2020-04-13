@@ -9,7 +9,10 @@ class GymSubscriptionHistoryController extends AppController
 	{
 		$session = $this->request->session()->read("User");
 		$pay_tbl = TableRegistry::get("MembershipPayment");
+		$ppay_tbl = TableRegistry::get("PackagePayment");
 		$membership_tbl = TableRegistry::get("Membership");
+		$package_tbl = TableRegistry::get("Package");
+		$pdata = $ppay_tbl->find("all")->where(["member_id"=>$session["id"]])->select($ppay_tbl);
 		$data = $pay_tbl->find("all")->where(["member_id"=>$session["id"]])->select($pay_tbl);
 		$data = $data->leftjoin(["Membership" => "membership"],
 								["MembershipPayment.membership_id = Membership.id"])->select($membership_tbl)->hydrate(false)->toArray();
