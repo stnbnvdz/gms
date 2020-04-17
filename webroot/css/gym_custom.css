@@ -623,10 +623,14 @@ span.pay_status {
 .info-box .panel-body img {
     transition: all 0.3s ease 0s;
 }
+img.dashboard_icon {
+    margin-bottom: 20px;
+}
 
 img.dashboard_background {
     margin-top: 10px;
 }
+
 .info-box .info-box-stats {
     float: left;
     margin-top: 5px;

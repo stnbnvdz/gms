@@ -80,15 +80,15 @@ class PackagePaymentController extends AppController
 		if($this->request->is('post'))
 		{			
 			$mid = $this->request->data["user_id"];
-			$start_date = date("Y-m-d",strtotime($this->request->data["package_valid_from"]));
-			$end_date = date("Y-m-d",strtotime($this->request->data["package_valid_to"]));
+			$package_start_date = date("Y-m-d",strtotime($this->request->data["package_valid_from"]));
+			$package_end_date = date("Y-m-d",strtotime($this->request->data["package_valid_to"]));
 			$row = $this->PackagePayment->newEntity();
 			$pdata["member_id"] = $mid;
 			$pdata["package_id"] = $this->request->data["package_id"];
 			$pdata["package_amount"] = $this->request->data["package_amount"];
 			$pdata["package_paid_amount"] = 0;
-			$pdata["package_start_date"] = $start_date;
-			$pdata["package_end_date"] = $end_date;
+			$pdata["package_start_date"] = $package_start_date;
+			$pdata["package_end_date"] = $package_end_date;
 			$pdata["package_status"] = "Continue";
 			$pdata["package_payment_status"] = 0;
 			$pdata["package_created_date"] = date("Y-m-d");
@@ -97,15 +97,15 @@ class PackagePaymentController extends AppController
 			################## MEMBER's Current Membership Change ##################
 			$member_data = $this->PackagePayment->GymMember->get($mid);
 			$member_data->selected_package = $this->request->data["package_id"];
-			$member_data->package_valid_from = $start_date;
-			$member_data->package_valid_to = $end_date;
+			$member_data->package_valid_from = $package_start_date;
+			$member_data->package_valid_to = $package_end_date;
 			$this->PackagePayment->GymMember->save($member_data);
 			#####################Add Membership History #############################
 			$mem_histoty = $this->PackagePayment->PackageHistory->newEntity();
 			$hdata["member_id"] = $mid;
 			$hdata["selected_package"] = $this->request->data["package_id"];
-			$hdata["package_valid_from"] = $start_date;
-			$hdata["package_valid_to"] = $end_date;
+			$hdata["package_valid_from"] = $package_start_date;
+			$hdata["package_valid_to"] = $package_end_date;
 			$hdata["package_created_date"] = date("Y-m-d");
 			$hdata = $this->PackagePayment->PackageHistory->patchEntity($mem_histoty,$hdata);
 			if($this->PackagePayment->PackageHistory->save($mem_histoty))

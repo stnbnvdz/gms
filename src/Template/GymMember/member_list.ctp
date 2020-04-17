@@ -1,10 +1,13 @@
 
+
 <?php $session = $this->request->session()->read("User");?>	
 <script>
 $(document).ready(function(){		
 	$("#example.mydataTable").DataTable({
 		"responsive": true,
+
 		"order": [[ 1, "asc" ]],
+		"paging": true,	
 		"aoColumns":[
 	                  {"bSortable": false},
 	                  {"bSortable": true},
@@ -27,21 +30,11 @@ $(document).ready(function(){
 if($session["role_name"] == "administrator" || $session["role_name"] == "member" || $session["role_name"] == "staff_member")
 { ?>
 <script>
-$(document).ready(function() {
-    var table = $('.mydataTable').DataTable( {
-        scrollY:        "300px",
-        scrollX:        true,
-        scrollCollapse: true,
-        paging:         false,
-        columnDefs: [
-            { width: '30%', targets: 0 }
-		],
-		fixedColumns:   {
-            leftColumns: 2
-        }
-    } );
-    new $.fn.dataTable.FixedColumns( table );
-} );
+$(document).ready(function(){
+	var table = $(".mydataTable").DataTable();
+	table.column(7).visible( true );
+	
+});
 </script>
 <?php } 
 

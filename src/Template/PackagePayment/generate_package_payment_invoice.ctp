@@ -10,12 +10,12 @@ $(".mem_valid_from").datepicker( "option", "dateFormat", "<?php echo $this->Gym-
 <?php
 if($edit)
 {?>
-$( ".mem_valid_from" ).datepicker( "setDate", new Date("<?php echo date($this->Gym->getSettings("date_format"),strtotime($pdata['package_start_date'])); ?>" ));
+$( ".mem_valid_from" ).datepicker( "setDate", new Date("<?php echo date($this->Gym->getSettings("date_format"),strtotime($data['package_start_date'])); ?>" ));
 <?php } ?>
 // $(".mem_valid_from").datepicker({format: 'yyyy-mm-dd'}).on("change",function(ev){
 $(".mem_valid_from").on("change",function(ev){
 				
-				var ajaxurl = $("#pack_date_check_path").val();
+				var ajaxurl = $("#mem_date_check_path").val();
 				var date = ev.target.value;	
 				var package = $(".gen_package_id option:selected").val();			
 				if(package != "")
@@ -66,16 +66,16 @@ $(".mem_valid_from").on("change",function(ev){
 				<?php
 				if($edit)
 				{
-					echo $this->Form->input("",["type"=>"hidden","name"=>"user_id","label"=>false,"class"=>"form-control","value"=>$pdata["member_id"]]);
+					echo $this->Form->input("",["type"=>"hidden","name"=>"user_id","label"=>false,"class"=>"form-control","value"=>$data["member_id"]]);
 				}
-				echo $this->Form->select("user_id",$members,["default"=>($edit)?$pdata["member_id"]:"","empty"=>__("Select Member"),"class"=>"pack_list","required"=>"true",($edit)?"disabled":""]);
+				echo $this->Form->select("user_id",$members,["default"=>($edit)?$data["member_id"]:"","empty"=>__("Select Member"),"class"=>"pack_list","required"=>"true",($edit)?"disabled":""]);
 				?>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="package"><?php echo __("Package");?><span class="text-danger">*</span></label>
 			<div class="col-sm-8">
-				<?php echo $this->Form->select("package_id",$package,["default"=>($edit)?$pdata["package_id"]:"","empty"=>__("Select Package"),"class"=>"form-control gen_package_id","data-url"=>$this->request->base . "/GymAjax/get_amount_by_packages"]);?>		
+				<?php echo $this->Form->select("package_id",$package,["default"=>($edit)?$data["package_id"]:"","empty"=>__("Select Package"),"class"=>"form-control gen_package_id","data-url"=>$this->request->base . "/GymAjax/get_amount_by_packages"]);?>		
 			</div>
 		</div>
 		<div class="form-group">
@@ -83,18 +83,18 @@ $(".mem_valid_from").on("change",function(ev){
 			<div class="col-sm-8">
 				<div class='input-group'>
 					<span class='input-group-addon'><?php echo $this->Gym->get_currency_symbol();?></span>
-					<input id="total_package_amount" class="form-control validate[required,custom[number]]" type="text" value="<?php echo ($edit)?$pdata["package_amount"]:"";?>" name="package_amount" readonly="">
+					<input id="total_package_amount" class="form-control validate[required,custom[number]]" type="text" value="<?php echo ($edit)?$data["package_amount"]:"";?>" name="package_amount" readonly="">
 				</div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="begin_date"><?php echo __("Package Valid From");?><span class="text-danger">*</span></label>
 			<div class="col-sm-3">
-				<?php echo $this->Form->input("",["label"=>false,"name"=>"package_valid_from","class"=>"form-control validate[required] mem_valid_from","value"=>($edit)?date($this->Gym->getSettings("date_format"),strtotime($pdata["package_start_date"])):""]); ?>				
+				<?php echo $this->Form->input("",["label"=>false,"name"=>"package_valid_from","class"=>"form-control validate[required] mem_valid_from","value"=>($edit)?date($this->Gym->getSettings("date_format"),strtotime($data["package_start_date"])):""]); ?>				
 			</div>
 			<div class="col-sm-1 text-center">	<?php echo __("To");?>			</div>
 			<div class="col-sm-4">
-				<?php echo $this->Form->input("",["label"=>false,"name"=>"package_valid_to","class"=>"form-control validate[required] valid_to","value"=>(($edit)?date($this->Gym->getSettings("date_format"),strtotime($pdata['package_end_date'])):''),"readonly"=>true]);
+				<?php echo $this->Form->input("",["label"=>false,"name"=>"package_valid_to","class"=>"form-control validate[required] valid_to","value"=>(($edit)?date($this->Gym->getSettings("date_format"),strtotime($data['package_end_date'])):''),"readonly"=>true]);
 				?>
 			</div>
 		</div>		
@@ -103,7 +103,7 @@ $(".mem_valid_from").on("change",function(ev){
         </div>
 		</form>
 			
-		<input type="hidden" value="<?php echo $this->request->base;?>/GymAjax/get_package_end_date" id="pack_date_check_path">
+		<input type="hidden" value="<?php echo $this->request->base;?>/GymAjax/get_package_end_date" id="mem_date_check_path">
 		
 		
 		

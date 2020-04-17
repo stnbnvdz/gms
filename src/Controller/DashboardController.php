@@ -41,13 +41,17 @@ class DashboardController extends AppController
 		$membership_tbl = TableRegistry::get("Membership");				
 		$notice_tbl = TableRegistry::get("gym_notice");		
 		$payment_tbl = TableRegistry::get("MembershipPayment");
-
+		$expenses_tbl = TableRegistry::get("GymIncomeExpense");
+		
 		$members = $mem_table->find("all")->where(["role_name"=>"member"]);
 		$members = $members->count();
 		
-		$staff_members = $mem_table->find("all")->where(["role_name"=>"staff_member"]);
+		$staff_members = $mem_table->find("all")->where(["role_name"=>"accountant"]);
 		$staff_members = $staff_members->count();
-		
+
+		$coach_members = $mem_table->find("all")->where(["role_name"=>"staff_member"]);
+		$coach_members = $coach_members->count();
+
 		$curr_id = intval($session["id"]);
 		$messages = $message_tbl->find("all")->where(["receiver"=>$curr_id]);
 		$messages = $messages->count();
@@ -57,9 +61,15 @@ class DashboardController extends AppController
 		
 		$groups = $grp_tbl->find("all");
 		$groups = $groups->count();
+	
+		$payment = $payment_tbl->find();
+		$payment->select(["totalpmnt" => $payment->func()->sum("paid_amount")]);
+	
+		debug($payment);
+		
+		$expenses = $expenses_tbl->find();
+		$expenses->select(['total_expenses'=> $expenses->func()->sum('total_amount')])->where(['invoice_type' => 'expense']);
 
-		$payment = $payment_tbl->find("all");
-		$payment = $payment->count();
 	//	$payment = $payment_tbl->sumOf("paid_amount");
 
 
@@ -71,12 +81,13 @@ class DashboardController extends AppController
 		$this->set("cal_lang",$cal_lang);
 		$this->set("members",$members);
 		$this->set("staff_members",$staff_members);
+		$this->set("coach_members",$coach_members);
 		$this->set("messages",$messages);
 		$this->set("groups",$groups);
 		$this->set("membership",$membership);
 		$this->set("groups_data",$groups_data);
-	//	$this->set("payment",$payment);
-
+		$this->set("payment",$payment);
+		$this->set("expenses",$expenses);
 		################################################
 		
 		$month =array('1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",

@@ -47,57 +47,129 @@ echo $this->Html->script('lang-all');
 <section class="content">
 <div id="main-wrapper">		
 		<div class="row"><!-- Start Row2 -->
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+            <div class="inner">
+              <h3 class="counter"><?php echo $members;?></h3>
+              <p><?php echo __("Member");?></p>
+            </div>
+            <div class="icon">
+            	<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/member-3.png" class="dashboard_icon" >
+            </div>
+			<a href="<?php echo $this->request->base ."/GymMember/memberList";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+		
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-teal">
+            <div class="inner">
+			<h3 class="counter"><?php echo $coach_members;?></h3>
+              <p><?php echo __("Coach");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/coach-1.png" class="dashboard_icon">
+            </div>
+			<a href="<?php echo $this->request->base ."/coach-members/coach-list";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-light-blue">
+            <div class="inner">
+			<h3 class="counter"><?php echo $staff_members;?></h3>
+              <p><?php echo __("Staff");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/staff-member1.png" class="dashboard_icon">
+            </div>
+			<a href="<?php echo $this->request->base ."/gym-staff/staff-list";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+			<h3 class="counter"><?php echo $groups;?></h3>
+			<p><?php echo __("Group");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/member-2.png" class="dashboard_icon">
+            </div>
+            <a href="<?php echo $this->request->base ."/gym-group/group-list";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-olive">
+            <div class="inner">
+			<h3 class="counter"><?php echo $payment->totalpmnt; ?></h3>
+			  <p><?php echo __("Payment");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/message2.png" class="dashboard_icon">
+            </div>
+            <a href="<?php echo $this->request->base ."/membership-payment/payment-list";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+			<h3 class="counter"><?php echo $expenses->total_expenses;?></h3>
+			  <p><?php echo __("Income");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/message2.png" class="dashboard_icon">
+            </div>
+            <a href="<?php echo $this->request->base ."/gym-message/inbox";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-maroon">
+            <div class="inner">
+			<h3 class="counter"><?php echo $expenses->total_expenses;?></h3>
+			  <p><?php echo __("Expenses");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/message2.png" class="dashboard_icon">
+            </div>
+            <a href="<?php echo $this->request->base ."/gym-message/inbox";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		<div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+			<h3 class="counter"><?php echo $messages;?></h3>
+			  <p><?php echo __("Message");?></p>
+            </div>
+            <div class="icon">
+			<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/message2.png" class="dashboard_icon">
+            </div>
+            <a href="<?php echo $this->request->base ."/gym-message/inbox";?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+
+		
+
 		<div class="row left_section col-md-8 col-sm-8">
-			<div class="col-lg-3 col-md-3 col-xs-6 col-sm-6">
-			<a href="<?php echo $this->request->base ."/GymMember/memberList";?>">
-				<div class="panel info-box panel-white">
-					<div class="panel-body member">
-						<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/member.png" class="dashboard_background">
-						<div class="info-box-stats">
-							<p class="counter"><?php echo $members;?> <span class="info-box-title"><?php echo __("Member");?></span></p>
-						</div>
-					</div>
-				</div>
-			</a>
-			</div>
-			<div class="col-lg-3 col-md-3 col-xs-6 col-sm-6">
-			<a href="<?php echo $this->request->base ."/coach-members/coach-list";?>">
-				<div class="panel info-box panel-white">
-					<div class="panel-body staff-member">
-						<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/staff-member.png" class="dashboard_background">
-                        <div class="info-box-stats">
-							<p class="counter"><?php echo $staff_members;?><span class="info-box-title"><?php echo __("Coach");?></span></p>
-						</div>
-					</div>
-				</div>
-				</a>
-			</div>
-			
-			<div class="col-lg-3 col-md-3 col-xs-6 col-sm-6">
-			<a href="<?php echo $this->request->base ."/gym-group/group-list";?>">
-				<div class="panel info-box panel-white">
-					<div class="panel-body group">
-						<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/group.png" class="dashboard_background">
-						<div class="info-box-stats groups-label">
-							<p class="counter"><?php echo $groups;?><span class="info-box-title"><?php echo __("Group");?></span></p>
-						</div>
-						
-					</div>
-				</div>
-				</a>
-			</div>
-			<div class="col-lg-3 col-md-3 col-xs-6 col-sm-6">
-			<a href="<?php echo $this->request->base ."/gym-message/inbox";?>">
-				<div class="panel info-box panel-white">
-					<div class="panel-body message no-padding">
-						<img src="<?php echo $this->request->base;?>/webroot/img/dashboard/message.png" class="dashboard_background_message">
-						<div class="info-box-stats">
-							<p class="counter"><?php echo $messages;?><span class="info-box-title"><?php echo __("Message");?></span></p>
-						</div>
-					</div>
-				</div>
-				</a>
-			</div>
 			</div>
 			<div class="col-md-4 membership-list <?php echo $pull;?> col-sm-4 col-xs-12">
 				<div class="panel panel-white">
@@ -137,6 +209,7 @@ echo $this->Html->script('lang-all');
 					</div>
 				</div>
 		   </div>
+		   
 			<div class="col-md-8 col-sm-8 col-xs-12">
 				<div class="panel panel-white">
 					<div class="panel-body">
