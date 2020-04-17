@@ -111,7 +111,7 @@ echo $this->Html->script('lang-all');
           <!-- small box -->
           <div class="small-box bg-olive">
             <div class="inner">
-			<h3 class="counter"><?php echo $payment->totalpmnt; ?></h3>
+			<h3 class="counter"><?php echo __("₱");?><?php echo $payment->totalpmnt;?></h3>
 			  <p><?php echo __("Payment");?></p>
             </div>
             <div class="icon">
@@ -126,7 +126,7 @@ echo $this->Html->script('lang-all');
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-			<h3 class="counter"><?php echo $expenses->total_expenses;?></h3>
+			<h3 class="counter"><?php echo __("₱");?><?php echo $income->total_income;?></h3>
 			  <p><?php echo __("Income");?></p>
             </div>
             <div class="icon">
@@ -141,7 +141,7 @@ echo $this->Html->script('lang-all');
           <!-- small box -->
           <div class="small-box bg-maroon">
             <div class="inner">
-			<h3 class="counter"><?php echo $expenses->total_expenses;?></h3>
+			<h3 class="counter"><?php echo __("₱");?><?php echo $expenses->total_expenses;?></h3>
 			  <p><?php echo __("Expenses");?></p>
             </div>
             <div class="icon">

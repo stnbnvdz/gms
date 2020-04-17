@@ -42,7 +42,7 @@ class DashboardController extends AppController
 		$notice_tbl = TableRegistry::get("gym_notice");		
 		$payment_tbl = TableRegistry::get("MembershipPayment");
 		$expenses_tbl = TableRegistry::get("GymIncomeExpense");
-		
+
 		$members = $mem_table->find("all")->where(["role_name"=>"member"]);
 		$members = $members->count();
 		
@@ -62,16 +62,16 @@ class DashboardController extends AppController
 		$groups = $grp_tbl->find("all");
 		$groups = $groups->count();
 	
-		$payment = $payment_tbl->find();
-		$payment->select(["totalpmnt" => $payment->func()->sum("paid_amount")]);
-	
-		debug($payment);
 		
-		$expenses = $expenses_tbl->find();
-		$expenses->select(['total_expenses'=> $expenses->func()->sum('total_amount')])->where(['invoice_type' => 'expense']);
+		$query = $payment_tbl->find(); 
+		$payment = $query->select(["totalpmnt" => $query->func()->sum("paid_amount")])->first();
+		
+		$query = $expenses_tbl->find()->where(["invoice_type"=>"expense"]);;
+		$expenses = $query->select(['total_expenses'=> $query->func()->sum('total_amount')])->first();
 
+		$query = $expenses_tbl->find()->where(["invoice_type"=>"income"]);;
+		$income = $query->select(['total_income'=> $query->func()->sum('total_amount')])->first();
 	//	$payment = $payment_tbl->sumOf("paid_amount");
-
 
 		$membership = $membership_tbl->find("all")->limit(5)->select(["membership_label","gmgt_membershipimage"])->hydrate(false)->toArray();
 		$groups_data = $grp_tbl->find("all")->limit(5)->select(["name","image"])->hydrate(false)->toArray();
@@ -88,6 +88,7 @@ class DashboardController extends AppController
 		$this->set("groups_data",$groups_data);
 		$this->set("payment",$payment);
 		$this->set("expenses",$expenses);
+		$this->set("income",$income);
 		################################################
 		
 		$month =array('1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",
